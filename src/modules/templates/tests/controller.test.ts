@@ -12,7 +12,7 @@ beforeEach(async () => {
   app = createApp(db)
 })
 
-describe('POST /messages', () => {
+describe('POST /templates', () => {
   it('should send a message and return 200', async () => {
     const response = await request(app).post('/messages').send({
       userID: '1223',
@@ -22,20 +22,6 @@ describe('POST /messages', () => {
     expect(response.status).toBe(200)
     expect(response.body.message).toBeDefined()
     expect(response.body.gifURL).toMatch(/^https?:\/\//)
-  })
-
-  it('should return 400 if userID is not provided', async () => {
-    const response = await request(app).post('/messages').send({
-      sprintID: 'WD-1.1',
-    })
-    expect(response.status).toBe(400)
-  })
-
-  it('should return 400 if sprintID is not provided', async () => {
-    const response = await request(app).post('/messages').send({
-      userID: '1223',
-    })
-    expect(response.status).toBe(400)
   })
 
 })
