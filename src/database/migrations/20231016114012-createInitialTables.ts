@@ -27,9 +27,6 @@ export async function up(db: Kysely<SqliteDatabase>) {
     .addColumn('user_id', 'integer', (c) => c.notNull())
     .addColumn('message_text', 'text', (c) => c.notNull())
     .addColumn('gif_url', 'text', (c) => c.notNull())
-    .addColumn('template_id', 'integer', (c) =>
-      c.notNull().references('templates.id')
-    )
     .addColumn('strint_id', 'text', (c) =>
       c.notNull().references('sprints.id')
     )

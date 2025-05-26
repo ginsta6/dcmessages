@@ -11,7 +11,6 @@ export interface Messages {
   sentAt: string;
   status: string | null;
   strintId: string;
-  templateId: number;
   userId: number;
 }
 

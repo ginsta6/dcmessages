@@ -8,7 +8,6 @@ export default async function seedMessages(db: Database) {
         userId: 1,
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
-        templateId: 1,
         strintId: 'WD-1.1',
         sentAt: new Date().toISOString(),
         status: 'sent',

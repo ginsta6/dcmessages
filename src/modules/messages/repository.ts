@@ -32,7 +32,6 @@ export default (db: Database) => {
           userId: parseInt(userID, 10),
           messageText: template.text,
           gifUrl: 'https://www.tenor.com',
-          templateId: template.id,
           strintId: sprintID,
           sentAt: new Date().toISOString(),
           status: 'sent',

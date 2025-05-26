@@ -1,49 +1,37 @@
-import { sql } from 'kysely'
 import type { Database } from '@/database'
 
-export default (db: Database) => {
-  const getRandomTemplate = async () =>
+export default (db: Database) => ({
+  createTemplate: async (templateText: string) =>
+    db
+      .insertInto('templates')
+      .values({
+        text: templateText,
+        createdAt: new Date().toISOString(),
+      })
+      .returningAll()
+      .executeTakeFirst(),
+
+  getByID: async (templateID: number) =>
     db
       .selectFrom('templates')
       .selectAll()
-      .orderBy(sql`RANDOM()`)
-      .limit(1)
-      .executeTakeFirst()
+      .where('id', '=', templateID)
+      .executeTakeFirst(),
 
-  return {
-    findAll: async (limit = 10, offset = 0) => {
-      db.selectFrom('messages')
-        .selectAll()
-        .limit(limit)
-        .offset(offset)
-        .execute()
-    },
+  updateTemplate: async (templateID: number, templateText: string) =>
+    db
+      .updateTable('templates')
+      .set({
+        text: templateText,
+        updatedAt: new Date().toISOString(),
+      })
+      .where('id', '=', templateID)
+      .returningAll()
+      .executeTakeFirst(),
 
-    createMessage: async (userID: string, sprintID: string) => {
-      const template = await getRandomTemplate()
-
-      if (!template) {
-        throw new Error('No template found')
-      }
-
-      return db
-        .insertInto('messages')
-        .values({
-          userId: parseInt(userID, 10),
-          messageText: template.text,
-          gifUrl: 'https://www.tenor.com',
-          templateId: template.id,
-          strintId: sprintID,
-          sentAt: new Date().toISOString(),
-          status: 'sent',
-        })
-        .returningAll()
-        .executeTakeFirst()
-    },
-
-    getRandomTemplate,
-  }
-}
-
-// userID: '123',
-// sprintID: 'WD-1.1',
+  deleteTemplate: async (templateID: number) =>
+    db
+      .deleteFrom('templates')
+      .where('id', '=', templateID)
+      .execute(),
+})
