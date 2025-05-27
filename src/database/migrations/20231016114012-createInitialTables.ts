@@ -24,16 +24,13 @@ export async function up(db: Kysely<SqliteDatabase>) {
     .createTable('messages')
     .ifNotExists()
     .addColumn('id', 'integer', (c) => c.primaryKey().autoIncrement().notNull())
-    .addColumn('user_id', 'integer', (c) => c.notNull())
+    .addColumn('username', 'text', (c) => c.notNull())
     .addColumn('message_text', 'text', (c) => c.notNull())
     .addColumn('gif_url', 'text', (c) => c.notNull())
-    .addColumn('strint_id', 'text', (c) =>
-      c.notNull().references('sprints.id')
-    )
+    .addColumn('sprint_title', 'text', (c) => c.notNull())
     .addColumn('sent_at', 'timestamp', (c) => c.notNull())
     .addColumn('status', 'text')
     .execute()
-
 }
 
 export async function down() {

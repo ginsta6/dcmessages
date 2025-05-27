@@ -10,8 +10,8 @@ export interface Messages {
   messageText: string;
   sentAt: string;
   status: string | null;
-  strintId: string;
-  userId: number;
+  sprintTitle: string;
+  username: string;
 }
 
 export interface Sprints {
