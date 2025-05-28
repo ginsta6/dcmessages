@@ -66,7 +66,7 @@ export default (db: Database) => {
         .where('sprints.id', '=', sprintID)
         .execute(),
 
-    createMessage: async (userName: string, sprintID: string) => {
+    createMessage: async (username: string, sprintID: string, gifUrl: string) => {
       const template = await getRandomTemplate()
       const sprint = await getSprintTitle(sprintID)
 
@@ -81,9 +81,9 @@ export default (db: Database) => {
       return db
         .insertInto('messages')
         .values({
-          username: userName,
+          username,
           messageText: template.text,
-          gifUrl: 'https://www.tenor.com',
+          gifUrl,
           sprintTitle: sprint.title,
           sentAt: new Date().toISOString(),
           status: 'sent',

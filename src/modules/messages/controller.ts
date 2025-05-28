@@ -2,6 +2,7 @@ import { Router } from 'express'
 import type { Database } from '@/database'
 import { jsonRoute } from '@/utils/middleware'
 import buildRespository from './repository'
+import getGif from '@/services/giphy'
 
 export default (db: Database) => {
   const messages = buildRespository(db)
@@ -15,9 +16,16 @@ export default (db: Database) => {
       if (!username || !sprintID) {
         return res.status(400).json({ error: 'Missing required fields' })
       }
+      const gifData = await getGif()
+      if (!gifData)
+        return res.status(500).json({ error: 'Failed fetching gif' })
 
       try {
-        const message = await messages.createMessage(username, sprintID)
+        const message = await messages.createMessage(
+          username,
+          sprintID,
+          gifData.data[0].url
+        )
 
         res.status(200)
         res.json({
