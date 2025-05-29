@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { promises } from 'node:dns';
 
 export interface GiphyGifData {
   id: string;

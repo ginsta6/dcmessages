@@ -3,6 +3,7 @@ import type { Database } from '@/database'
 import { jsonRoute } from '@/utils/middleware'
 import buildRespository from './repository'
 import getGif from '@/services/giphy'
+import { sendMessageToChannel } from '@/services/discord/discord'
 
 export default (db: Database) => {
   const messages = buildRespository(db)
@@ -24,9 +25,10 @@ export default (db: Database) => {
         const message = await messages.createMessage(
           username,
           sprintID,
-          gifData.url
+          gifData.embed_url
         )
 
+        sendMessageToChannel(message)
         res.status(200)
         res.json({
           message: message?.messageText,
