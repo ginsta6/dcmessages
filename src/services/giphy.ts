@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { promises } from 'node:dns';
 
 export interface GiphyGifData {
   id: string;
@@ -28,8 +29,18 @@ export interface GiphyResponse {
 
 const { GIPHY_KEY } = process.env;
 
+
+export default async function getRandomGif(query:string): Promise<GiphyGifData | null> {
+  const results = await fetchCongratsGifs(query)
+  if (!results) return null
+
+  const randomInt = Math.floor(Math.random() * (49 - 0 + 1)) + 0;
+
+  return results.data[randomInt]
+}
+
 // Function to fetch congratulatory GIFs from Giphy
-export default async function fetchCongratsGifs(): Promise<GiphyResponse | null> {
+async function fetchCongratsGifs(query: string): Promise<GiphyResponse | null> {
   if (!GIPHY_KEY) {
     console.error('GIPHY_KEY is not set in environment variables.');
     return null;
@@ -41,8 +52,8 @@ export default async function fetchCongratsGifs(): Promise<GiphyResponse | null>
       {
         params: {
           api_key: GIPHY_KEY,
-          q: 'congratulations',
-          limit: 25,
+          q: query,
+          limit: 50,
           offset: 0,
           rating: 'g',
           lang: 'en',

@@ -16,7 +16,7 @@ export default (db: Database) => {
       if (!username || !sprintID) {
         return res.status(400).json({ error: 'Missing required fields' })
       }
-      const gifData = await getGif()
+      const gifData = await getGif('congratulations')
       if (!gifData)
         return res.status(500).json({ error: 'Failed fetching gif' })
 
@@ -24,7 +24,7 @@ export default (db: Database) => {
         const message = await messages.createMessage(
           username,
           sprintID,
-          gifData.data[0].url
+          gifData.url
         )
 
         res.status(200)
