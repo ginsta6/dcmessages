@@ -36,8 +36,8 @@ export async function sendMessageToChannel(rawMessageData: Messages) {
       throw new Error('Channel not found or is not text-based.')
     }
 
-    const embed = await formatMessage(rawMessageData)
-    await (channel as TextChannel).send({embeds: [embed]})
+    await (channel as TextChannel).send(await formatMessage(rawMessageData))
+    await (channel as TextChannel).send(rawMessageData.gifUrl)
     console.log(`Message sent to ${DC_CHANNEL_ID}`)
   } catch (err) {
     console.error(`Failed to send message to channel ${DC_CHANNEL_ID}:`, err)
@@ -45,12 +45,8 @@ export async function sendMessageToChannel(rawMessageData: Messages) {
   }
 }
 
-async function formatMessage(data: Messages): Promise<EmbedBuilder> {
-  return new EmbedBuilder()
-    .setDescription(
-      `${data.username} completed **${data.sprintTitle}**!\n\n${data.messageText}`
-    )
-    .setImage(data.gifUrl)
-    .setColor(0x00b0f4) // Optional: nice blue color
-    .setTimestamp() // Optional: adds current timestamp
+async function formatMessage(data: Messages): Promise<string> {
+  const message = `${data.username} completed **${data.sprintTitle}**!\n\n${data.messageText}`
+
+  return message
 }
