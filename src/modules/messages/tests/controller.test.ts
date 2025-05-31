@@ -4,6 +4,25 @@ import { Express } from 'express'
 import createApp from '@/app'
 import { seedDatabase } from '@/database/seed/seed'
 
+
+vi.mock('@/services/discord', () => ({
+  sendMessageToChannel: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('@/services/giphy', () => ({
+  default: vi.fn().mockResolvedValue({
+    id: 'abc123',
+    url: 'https://giphy.com/view/abc123',
+    embed_url: 'https://giphy.com/embed/abc123',
+    title: 'Funny Cat GIF',
+    images: {
+      original: {
+        url: 'https://giphy.com/images/original.gif',
+      },
+    },
+  }),
+}));
+
 let app: Express
 
 beforeEach(async () => {

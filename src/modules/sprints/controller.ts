@@ -2,6 +2,7 @@ import { Router } from 'express'
 import type { Database } from '@/database'
 import { jsonRoute } from '@/utils/middleware'
 import buildRespository from './repository'
+import { SprintBodySchema, SprintQuerySchema } from '@/validators/sprintSchema'
 
 export default (db: Database) => {
   const sprints = buildRespository(db)
@@ -10,23 +11,27 @@ export default (db: Database) => {
   router.post(
     '/',
     jsonRoute(async (req, res) => {
-      const { id, title } = req.body
+      const parseResult = SprintBodySchema.safeParse(req.body)
 
-      if (!id || !title) {
-        return res.status(400).json({ error: 'Missing required fields' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid input',
+          details: parseResult.error.format(),
+        })
       }
+
+      const { id, title } = parseResult.data
 
       try {
         const sprint = await sprints.createSprint(id, title)
 
-        res.status(200)
-        res.json({
+        return res.status(200).json({
           createdID: sprint?.id,
           title: sprint?.title,
         })
       } catch (error) {
-        console.log('Error creating sprint:', error) // Log for debugging
-        res.status(500).json({ error: 'Failed to create sprint' }) // Better status & message
+        console.log('Error creating sprint:', error)
+        return res.status(500).json({ error: 'Failed to create sprint' })
       }
     })
   )
@@ -34,13 +39,17 @@ export default (db: Database) => {
   router.get(
     '/',
     jsonRoute(async (req, res) => {
-      const { id } = req.query
+      const parseResult = SprintQuerySchema.safeParse(req.query)
 
-      if (!id || typeof id !== 'string') {
-        return res
-          .status(400)
-          .json({ error: 'Missing or invalid id parameter' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid query',
+          details: parseResult.error.format()
+        })
       }
+
+      const { id } = parseResult.data
+
 
       try {
         const sprint = await sprints.getByID(id)
@@ -49,11 +58,10 @@ export default (db: Database) => {
           return res.status(404).json({ error: 'Sprint not found' })
         }
 
-        res.status(200)
-        res.json(sprint)
+        return res.status(200).json(sprint)
       } catch (error) {
         console.error('Error fetching sprint:', error)
-        res.status(500).json({ error: 'Failed to get sprint' })
+        return res.status(500).json({ error: 'Failed to get sprint' })
       }
     })
   )
@@ -61,25 +69,24 @@ export default (db: Database) => {
   router.patch(
     '/',
     jsonRoute(async (req, res) => {
-      const { id, title } = req.body
+      const parseResult = SprintBodySchema.safeParse(req.body)
 
-      if (!id || typeof id !== 'string') {
-        return res
-          .status(400)
-          .json({ error: 'Missing or invalid id parameter' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid input',
+          details: parseResult.error.format()
+        })
       }
 
-      try {
-        const updatedSprint = await sprints.updateSprint(
-          id,
-          title
-        )
+      const { id, title } = parseResult.data
 
-        res.status(200)
-        res.json(updatedSprint)
+      try {
+        const updatedSprint = await sprints.updateSprint(id, title)
+
+        return res.status(200).json(updatedSprint)
       } catch (error) {
         console.error('Error updating sprint:', error)
-        res.status(500).json({ error: 'Failed to update sprint' })
+        return res.status(500).json({ error: 'Failed to update sprint' })
       }
     })
   )
@@ -87,21 +94,23 @@ export default (db: Database) => {
   router.delete(
     '/',
     jsonRoute(async (req, res) => {
-      const { id } = req.query
+      const parseResult = SprintQuerySchema.safeParse(req.query)
 
-      if (!id || typeof id !== 'string') {
-        return res
-          .status(400)
-          .json({ error: 'Missing or invalid id parameter' })
+      if(!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid query',
+          details: parseResult.error.format()
+        })
       }
+      const { id } = parseResult.data
 
       try {
         await sprints.deleteSprint(id)
 
-        res.status(200).json({ success: true, deletedId: id })
+        return res.status(200).json({ success: true, deletedId: id })
       } catch (error) {
         console.error('Error deleting sprint:', error)
-        res.status(500).json({ error: 'Failed to delete sprint' })
+        return res.status(500).json({ error: 'Failed to delete sprint' })
       }
     })
   )

@@ -2,6 +2,11 @@ import { Router } from 'express'
 import type { Database } from '@/database'
 import { jsonRoute } from '@/utils/middleware'
 import buildRespository from './repository'
+import {
+  TemplateQuerySchema,
+  CreateTemplateBodySchema,
+  UpdateTemplateBodySchema,
+} from '@/validators/templateSchema'
 
 export default (db: Database) => {
   const templates = buildRespository(db)
@@ -10,23 +15,27 @@ export default (db: Database) => {
   router.post(
     '/',
     jsonRoute(async (req, res) => {
-      const { text } = req.body
+      const parseResult = CreateTemplateBodySchema.safeParse(req.body)
 
-      if (!text) {
-        return res.status(400).json({ error: 'Missing text field' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid input',
+          details: parseResult.error.format(),
+        })
       }
+
+      const { text } = parseResult.data
 
       try {
         const template = await templates.createTemplate(text)
 
-        res.status(200)
-        res.json({
+        return res.status(200).json({
           createdID: template?.id,
           text: template?.text,
         })
       } catch (error) {
         console.log('Error creating template:', error) // Log for debugging
-        res.status(500).json({ error: 'Failed to create template' }) // Better status & message
+        return res.status(500).json({ error: 'Failed to create template' }) // Better status & message
       }
     })
   )
@@ -34,26 +43,28 @@ export default (db: Database) => {
   router.get(
     '/',
     jsonRoute(async (req, res) => {
-      const { id } = req.query
+      const parseResult = TemplateQuerySchema.safeParse(req.query)
 
-      if (!id || typeof id !== 'string') {
-        return res
-          .status(400)
-          .json({ error: 'Missing or invalid id parameter' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid query',
+          details: parseResult.error.format(),
+        })
       }
 
+      const { id } = parseResult.data
+
       try {
-        const template = await templates.getByID(parseInt(id, 10))
+        const template = await templates.getByID(id)
 
         if (!template) {
           return res.status(404).json({ error: 'Template not found' })
         }
 
-        res.status(200)
-        res.json(template)
+        return res.status(200).json(template)
       } catch (error) {
         console.error('Error fetching template:', error)
-        res.status(500).json({ error: 'Failed to get template' })
+        return res.status(500).json({ error: 'Failed to get template' })
       }
     })
   )
@@ -61,25 +72,24 @@ export default (db: Database) => {
   router.patch(
     '/',
     jsonRoute(async (req, res) => {
-      const { id, text } = req.body
+      const parseResult = UpdateTemplateBodySchema.safeParse(req.body)
 
-      if (!id || typeof id !== 'string') {
-        return res
-          .status(400)
-          .json({ error: 'Missing or invalid id parameter' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid input',
+          details: parseResult.error.format(),
+        })
       }
 
-      try {
-        const updatedTemplate = await templates.updateTemplate(
-          parseInt(id, 10),
-          text
-        )
+      const { id, text } = parseResult.data
 
-        res.status(200)
-        res.json(updatedTemplate)
+      try {
+        const updatedTemplate = await templates.updateTemplate(id, text)
+
+        return res.status(200).json(updatedTemplate)
       } catch (error) {
         console.error('Error updating template:', error)
-        res.status(500).json({ error: 'Failed to update template' })
+        return res.status(500).json({ error: 'Failed to update template' })
       }
     })
   )
@@ -87,21 +97,24 @@ export default (db: Database) => {
   router.delete(
     '/',
     jsonRoute(async (req, res) => {
-      const { id } = req.query
+      const parseResult = TemplateQuerySchema.safeParse(req.query)
 
-      if (!id || typeof id !== 'string') {
-        return res
-          .status(400)
-          .json({ error: 'Missing or invalid id parameter' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid query',
+          details: parseResult.error.format(),
+        })
       }
 
-      try {
-        await templates.deleteTemplate(parseInt(id, 10))
+      const { id } = parseResult.data
 
-        res.status(200).json({ success: true, deletedId: parseInt(id, 10) })
+      try {
+        await templates.deleteTemplate(id)
+
+        return res.status(200).json({ success: true, deletedId: id })
       } catch (error) {
         console.error('Error deleting template:', error)
-        res.status(500).json({ error: 'Failed to delete template' })
+        return res.status(500).json({ error: 'Failed to delete template' })
       }
     })
   )

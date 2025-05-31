@@ -3,7 +3,11 @@ import type { Database } from '@/database'
 import { jsonRoute } from '@/utils/middleware'
 import buildRespository from './repository'
 import getGif from '@/services/giphy'
-import { sendMessageToChannel } from '@/services/discord/discord'
+import { sendMessageToChannel } from '@/services/discord'
+import {
+  CreateMessageInputSchema,
+  GetMessagesQuerySchema,
+} from '@/validators/messageSchema'
 
 export default (db: Database) => {
   const messages = buildRespository(db)
@@ -12,11 +16,17 @@ export default (db: Database) => {
   router.post(
     '/',
     jsonRoute(async (req, res) => {
-      const { username, sprintID } = req.body
+      const parseResult = CreateMessageInputSchema.safeParse(req.body)
 
-      if (!username || !sprintID) {
-        return res.status(400).json({ error: 'Missing required fields' })
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid input',
+          details: parseResult.error.format(),
+        })
       }
+
+      const { username, sprintID } = parseResult.data
+
       const gifData = await getGif('congratulations')
       if (!gifData)
         return res.status(500).json({ error: 'Failed fetching gif' })
@@ -29,15 +39,14 @@ export default (db: Database) => {
         )
 
         sendMessageToChannel(message)
-        res.status(200)
-        res.json({
+        return res.status(200).json({
           message: message?.messageText,
           gifURL: message?.gifUrl,
           sprintTitle: message?.sprintTitle,
         })
       } catch (error) {
         console.log('Error creating message:', error) // Log for debugging
-        res.status(500).json({ error: 'Failed to create message' }) // Better status & message
+        return res.status(500).json({ error: 'Failed to create message' }) // Better status & message
       }
     })
   )
@@ -45,28 +54,35 @@ export default (db: Database) => {
   router.get(
     '/',
     jsonRoute(async (req, res) => {
-      const { id, page, username, sprint } = req.query
+      const parseResult = GetMessagesQuerySchema.safeParse(req.query)
+
+      if (!parseResult.success) {
+        return res.status(400).json({
+          error: 'Invalid query',
+          details: parseResult.error.format(),
+        })
+      }
+
+      const { id, page, username, sprint } = parseResult.data
       try {
-        if (typeof username === 'string') {
+        if (username) {
           const resultMessages = await messages.getByUsername(username)
           if (resultMessages.length === 0) {
-            res.sendStatus(404)
+            return res.sendStatus(404)
           }
-          res.status(200)
-          res.send(resultMessages)
+          return res.status(200).send(resultMessages)
         }
 
-        if (typeof sprint === 'string') {
+        if (sprint) {
           const resultMessages = await messages.getBySprint(sprint)
           if (resultMessages.length === 0) {
-            res.sendStatus(404)
+            return res.sendStatus(404)
           }
-          res.status(200)
-          res.send(resultMessages)
+          return res.status(200).send(resultMessages)
         }
 
         // Parse pagination
-        const pageNum = parseInt(page as string, 10) || 1
+        const pageNum = parseInt(page ?? '1', 10)
         const limit = 10
         const offset = (pageNum - 1) * limit
 
@@ -75,19 +91,18 @@ export default (db: Database) => {
 
         if (id) {
           if (Array.isArray(id)) {
-            ids = id.map((v) => parseInt(v as string, 10))
-          } else if (typeof id === 'string') {
+            ids = id.map((v) => parseInt(v, 10))
+          } else {
             ids = id.split(',').map((v) => parseInt(v.trim(), 10))
           }
         }
 
         const resultMessages = await messages.findAll({ ids, limit, offset })
 
-        res.status(200)
-        res.send(resultMessages)
+        return res.status(200).send(resultMessages)
       } catch (error) {
         console.log('Error fetching message:', error)
-        res.status(500).json({ error: 'Failed to fetch message' })
+        return res.status(500).json({ error: 'Failed to fetch message' })
       }
     })
   )
