@@ -1,96 +1,212 @@
-## 1. Overview
+# Discord Celebration Bot
 
-This is a basic backend system to manage movie screenings and ticket bookings. It includes features for both administrators and users.
+A Discord bot that sends congratulatory messages with GIFs to celebrate user achievements and sprint completions.
 
----
+## Features
 
-## 2. User Roles
+- Sends congratulatory messages with GIFs to Discord channels
+- Supports customizable message templates
+- Tracks sprint achievements
+- REST API for managing messages, templates, and sprints
+- Stores message history and metadata
 
-- **Administrator**
-- **Regular User**
+## Prerequisites
 
----
+- Node.js (v18 or higher)
+- npm or yarn
+- Discord Bot Token
+- Giphy API Key
 
-## 3. Functional Requirements
+## Installation
 
-### 3.1. Administrator Capabilities
-
-| Feature                 | Description                                                                 |
-|-------------------------|-----------------------------------------------------------------------------|
-| Create Screening        | Add a new screening with timestamp and ticket count.                        |
-| Delete Empty Screening  | Delete a screening **only** if no tickets are reserved. *(Optional)*        |
-| Update Ticket Allocation| Update the number of tickets as long as it’s ≥ tickets already reserved. *(Optional)* |
-
----
-
-### 3.2. User Capabilities
-
-| Feature                   | Description                                                                 |
-|---------------------------|-----------------------------------------------------------------------------|
-| Get Movies by ID          | Provide list of movie IDs and get their title & year.                       |
-| View Available Screenings | See screening details (timestamp, total tickets, tickets left, movie info). |
-| View My Tickets           | Get a list of all bookings (tickets) made by the user.                      |
-| Book Ticket               | Reserve a ticket for a screening if tickets are available.                  |
-
----
-
-## 4. Database Schema Changes
-
-Add the following new tables:
-
-### `users`
-- `id`, `username`, `email`, `password_hash`, `role`, `created_at`
-
-### `screenings`
-- `id`, `movie_id`, `timestamp`, `total_tickets`
-
-### `tickets`
-- `id`, `user_id`, `screening_id`, `booked_at`
-
----
-
-## 5. Technical Requirements
-
-- **Validation**: All inputs must be validated (e.g. IDs, timestamps, ticket counts).
-- **Migrations**: All database changes must be performed via migration scripts.
-- **Testing**: 
-  - Unit and integration tests required.
-  - Aim for **80–95% test coverage**.
-- **Commits**: Follow [Conventional Commits](https://www.conventionalcommits.org) standard.
-  - Example: `feat: add ticket booking endpoint`
-
----
-
-## Setup
-
-**Note:** For this exercise, we have provided an `.env` file with the database connection string. Normally, you would not commit this file to version control. We are doing it here for simplicity and given that we are using a local SQLite database.
-
-## Migrations
-
-Before running the migrations, we need to create a database. We can do this by running the following command:
+1. Clone the repository:
 
 ```bash
-npm run migrate:latest
+git clone <repository-url>
+cd discord-celebration-bot
 ```
 
-## Running the server
+2. Install dependencies:
 
-In development mode:
+```bash
+npm install
+```
+
+3. Create a `.env` file in the root directory with the following variables:
+
+```env
+# Discord Configuration
+DC_TOKEN=your_discord_bot_token
+DC_GUILD_ID=your_discord_server_id
+DC_CHANNEL_ID=your_discord_channel_id
+
+# GIF API Configuration
+GIPHY_KEY=your_giphy_api_key
+
+# Database Configuration
+DATABASE_URL=./data/messages.db
+```
+
+## Database Setup
+
+The application uses SQLite as its database. Before starting the application, you need to:
+
+1. Run database migrations:
+
+```bash
+npm run migrate
+```
+
+2. Generate database types:
+
+```bash
+npm run generate-types
+```
+
+3. (Optional) Seed the database with initial data:
+
+```bash
+npm run seed
+```
+
+## Running the Application
+
+Development mode:
 
 ```bash
 npm run dev
 ```
 
-In production mode:
+Production mode:
 
 ```bash
-npm run start
+npm start
 ```
 
-## Updating types
+## API Endpoints
 
-If you make changes to the database schema, you will need to update the types. You can do this by running the following command:
+### Messages
+
+- `POST /messages` - Send a congratulatory message
+  ```json
+  {
+    "username": "johndoe",
+    "sprint": "WD-1.1"
+  }
+  ```
+- `GET /messages` - Get all congratulatory messages
+- `GET /messages?username=johndoe` - Get messages for a specific user
+- `GET /messages?sprint=WD-1.1` - Get messages for a specific sprint
+
+### Templates
+
+- `POST /templates` - Create a new message template
+  ```json
+  {
+    "text": "You nailed it! 💪"
+  }
+  ```
+- `GET /templates?id=1` - Get template by id
+- `PATCH /templates` - Update a template
+  ```json
+  {
+    "id": "1",
+    "text": "Updated template text"
+  }
+  ```
+- `DELETE /templates?id=1` - Delete a template
+
+### Sprints
+
+- `POST /sprints` - Create a new sprint
+  ```json
+  {
+    "id": "WD-1.1",
+    "title": "Web Development Fundamentals"
+  }
+  ```
+- `GET /sprints?id=WD-1.1` - Get sprint by id
+- `PATCH /sprints` - Update a sprint
+  ```json
+  {
+    "id": "WD-1.1",
+    "title": "Updated title"
+  }
+  ```
+- `DELETE /sprints?id=1` - Delete a sprint
+
+## Obtaining Required API Keys
+
+### Discord Bot Token
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+2. Click "New Application" and give it a name
+3. Go to the "Bot" section and click "Add Bot"
+4. Under the bot's token, click "Copy" to get your `DC_TOKEN`
+5. Enable the following bot permissions:
+   - Send Messages
+   - Embed Links
+   - Attach Files
+   - Read Message History
+6. Go to OAuth2 > URL Generator:
+   - Select "bot" under scopes
+   - Select the required permissions
+   - Use the generated URL to add the bot to your server
+
+### Discord IDs
+
+To get the required Discord IDs (`DC_GUILD_ID` and `DC_CHANNEL_ID`):
+
+1. Open Discord
+2. Go to User Settings > Advanced
+3. Enable "Developer Mode"
+4. To get the Guild (Server) ID:
+   - Right-click on your server name
+   - Click "Copy Server ID"
+   - Use this as your `DC_GUILD_ID`
+5. To get the Channel ID:
+   - Right-click on the channel where you want the bot to post
+   - Click "Copy Channel ID"
+   - Use this as your `DC_CHANNEL_ID`
+
+### Giphy API Key
+
+1. Go to the [Giphy Developers Portal](https://developers.giphy.com/)
+2. Click "Create an App"
+3. Choose "API" as the app type
+4. Fill in the required information
+5. Once created, you'll find your API key in the dashboard
+6. Copy the API key to use as your `GIPHY_KEY`
+
+## Testing
+
+Run tests:
 
 ```bash
-npm run generate-types
+npm test
 ```
+
+Run tests with coverage:
+
+```bash
+npm run test:coverage
+```
+
+## Project Structure
+
+```
+src/
+├── database/     # Database configuration and migrations
+├── modules/      # Feature modules
+├── services/     # API services
+├── utils/        # Utility functions
+├── middleware/   # Express middleware
+├── app.ts        # Express application setup
+└── index.ts      # Application entry point
+```
+
+## Assumptions and Requirements
+
+- The Discord bot must be added to your server with appropriate permissions
+- GIF API (Giphy) must be configured for fetching celebration GIFs
+- Database migrations must be run before starting the application
