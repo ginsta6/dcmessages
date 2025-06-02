@@ -1,39 +1,40 @@
-import axios from 'axios';
+import axios from 'axios'
 
 export interface GiphyGifData {
-  id: string;
-  url: string;
-  embed_url: string;
-  title: string;
+  id: string
+  url: string
+  embed_url: string
+  title: string
   images: {
     original: {
-      url: string;
-    };
-  };
+      url: string
+    }
+  }
 }
 
 export interface GiphyResponse {
-  data: GiphyGifData[];
+  data: GiphyGifData[]
   meta: {
-    status: number;
-    msg: string;
-    response_id: string;
-  };
+    status: number
+    msg: string
+    response_id: string
+  }
   pagination: {
-    total_count: number;
-    count: number;
-    offset: number;
-  };
+    total_count: number
+    count: number
+    offset: number
+  }
 }
 
-const { GIPHY_KEY } = process.env;
+const { GIPHY_KEY } = process.env
 
-
-export default async function getRandomGif(query:string): Promise<GiphyGifData | null> {
+export default async function getRandomGif(
+  query: string
+): Promise<GiphyGifData | null> {
   const results = await fetchCongratsGifs(query)
   if (!results) return null
 
-  const randomInt = Math.floor(Math.random() * (49 - 0 + 1)) + 0;
+  const randomInt = Math.floor(Math.random() * (49 - 0 + 1)) + 0
 
   return results.data[randomInt]
 }
@@ -41,8 +42,8 @@ export default async function getRandomGif(query:string): Promise<GiphyGifData |
 // Function to fetch congratulatory GIFs from Giphy
 async function fetchCongratsGifs(query: string): Promise<GiphyResponse | null> {
   if (!GIPHY_KEY) {
-    console.error('GIPHY_KEY is not set in environment variables.');
-    return null;
+    console.error('GIPHY_KEY is not set in environment variables.')
+    return null
   }
 
   try {
@@ -59,10 +60,10 @@ async function fetchCongratsGifs(query: string): Promise<GiphyResponse | null> {
           bundle: 'messaging_non_clips',
         },
       }
-    );
-    return response.data;
+    )
+    return response.data
   } catch (error) {
-    console.error('Failed to fetch gif:', error);
-    return null;
+    console.error('Failed to fetch gif:', error)
+    return null
   }
 }

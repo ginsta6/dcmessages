@@ -5,12 +5,12 @@ export const TemplateQuerySchema = z.object({
 })
 
 export const CreateTemplateBodySchema = z.object({
-    text: z.string().min(5, 'Text is required')
+  text: z.string().min(5, 'Text is required'),
 })
 
 export const UpdateTemplateBodySchema = z.object({
-    id: z.coerce.number().int().min(1, 'ID is required'),
-    text: z.string().min(5, 'Text is required')
+  id: z.coerce.number().int().min(1, 'ID is required'),
+  text: z.string().min(5, 'Text is required'),
 })
 
 export type TemplateQueryInput = z.infer<typeof TemplateQuerySchema>

@@ -5,7 +5,7 @@ export default async function seedMessages(db: Database) {
     .insertInto('messages')
     .values([
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -13,7 +13,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -21,7 +21,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -29,7 +29,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -37,7 +37,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -45,7 +45,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -53,7 +53,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -61,7 +61,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -69,7 +69,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -77,7 +77,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "johdoe",
+        username: 'johdoe',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python OOP',
@@ -85,7 +85,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python OOP',
@@ -93,7 +93,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "kyberiano",
+        username: 'kyberiano',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',
@@ -101,7 +101,7 @@ export default async function seedMessages(db: Database) {
         status: 'sent',
       },
       {
-        username: "johdoe",
+        username: 'johdoe',
         messageText: 'Great job on the sprint!',
         gifUrl: 'https://www.tenor.com/example1.gif',
         sprintTitle: 'Python basics',

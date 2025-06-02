@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 // POST /
 export const CreateMessageInputSchema = z.object({
   username: z.string().min(1, 'Username is required'),
   sprintID: z.string().min(1, 'Sprint ID is required'),
-});
+})
 
 // GET /
 export const GetMessagesQuerySchema = z.object({
@@ -12,7 +12,7 @@ export const GetMessagesQuerySchema = z.object({
   page: z.string().optional(),
   username: z.string().optional(),
   sprint: z.string().optional(),
-});
+})
 
-export type CreateMessageInput = z.infer<typeof CreateMessageInputSchema>;
-export type GetMessagesQueryInput = z.infer<typeof GetMessagesQuerySchema>;
+export type CreateMessageInput = z.infer<typeof CreateMessageInputSchema>
+export type GetMessagesQueryInput = z.infer<typeof GetMessagesQuerySchema>

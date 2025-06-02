@@ -4,10 +4,9 @@ import { Express } from 'express'
 import createApp from '@/app'
 import { seedDatabase } from '@/database/seed/seed'
 
-
 vi.mock('@/services/discord', () => ({
   sendMessageToChannel: vi.fn().mockResolvedValue(undefined),
-}));
+}))
 
 vi.mock('@/services/giphy', () => ({
   default: vi.fn().mockResolvedValue({
@@ -21,7 +20,7 @@ vi.mock('@/services/giphy', () => ({
       },
     },
   }),
-}));
+}))
 
 let app: Express
 

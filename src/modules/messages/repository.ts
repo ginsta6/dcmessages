@@ -66,7 +66,11 @@ export default (db: Database) => {
         .where('sprints.id', '=', sprintID)
         .execute(),
 
-    createMessage: async (username: string, sprintID: string, gifUrl: string) => {
+    createMessage: async (
+      username: string,
+      sprintID: string,
+      gifUrl: string
+    ) => {
       const template = await getRandomTemplate()
       const sprint = await getSprintTitle(sprintID)
 

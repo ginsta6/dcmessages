@@ -44,12 +44,11 @@ export default (db: Database) => {
       if (!parseResult.success) {
         return res.status(400).json({
           error: 'Invalid query',
-          details: parseResult.error.format()
+          details: parseResult.error.format(),
         })
       }
 
       const { id } = parseResult.data
-
 
       try {
         const sprint = await sprints.getByID(id)
@@ -74,7 +73,7 @@ export default (db: Database) => {
       if (!parseResult.success) {
         return res.status(400).json({
           error: 'Invalid input',
-          details: parseResult.error.format()
+          details: parseResult.error.format(),
         })
       }
 
@@ -96,10 +95,10 @@ export default (db: Database) => {
     jsonRoute(async (req, res) => {
       const parseResult = SprintQuerySchema.safeParse(req.query)
 
-      if(!parseResult.success) {
+      if (!parseResult.success) {
         return res.status(400).json({
           error: 'Invalid query',
-          details: parseResult.error.format()
+          details: parseResult.error.format(),
         })
       }
       const { id } = parseResult.data

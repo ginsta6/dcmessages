@@ -14,5 +14,6 @@ dist-ssr
 coverage
 *.local
 .env
+.db
 
 data/database*

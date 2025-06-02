@@ -31,8 +31,5 @@ export default (db: Database) => ({
       .executeTakeFirst(),
 
   deleteSprint: async (id: string) =>
-    db
-      .deleteFrom('sprints')
-      .where('id', '=', id)
-      .execute(),
+    db.deleteFrom('sprints').where('id', '=', id).execute(),
 })

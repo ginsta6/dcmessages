@@ -30,8 +30,5 @@ export default (db: Database) => ({
       .executeTakeFirst(),
 
   deleteTemplate: async (templateID: number) =>
-    db
-      .deleteFrom('templates')
-      .where('id', '=', templateID)
-      .execute(),
+    db.deleteFrom('templates').where('id', '=', templateID).execute(),
 })

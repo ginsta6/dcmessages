@@ -36,10 +36,13 @@ describe('GET /templates', () => {
 
 describe('PATCH /templates', () => {
   it('should return an updated template, given id and new text', async () => {
-    const { body } = await request(app).patch('/templates').send({
-      id: '1',
-      text: 'Great job man',
-    }).expect(200)
+    const { body } = await request(app)
+      .patch('/templates')
+      .send({
+        id: '1',
+        text: 'Great job man',
+      })
+      .expect(200)
 
     expect(body).toMatchObject({
       id: 1,
@@ -55,16 +58,15 @@ describe('DELETE /templates', () => {
     // Delete it
     const deleteResponse = await request(app)
       .delete('/templates?id=1')
-      .expect(200); // or 204, depending on your API design
+      .expect(200) // or 204, depending on your API design
 
     expect(deleteResponse.body).toMatchObject({
       success: true,
       deletedId: 1,
-    }); // if you return something
+    }) // if you return something
 
     // Confirm it no longer exists
-    const getResponse = await request(app)
-      .get('/templates?id=1')
+    const getResponse = await request(app).get('/templates?id=1')
 
     expect(getResponse.body).toMatchObject({
       error: 'Template not found',
