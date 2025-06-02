@@ -46,6 +46,48 @@ GIPHY_KEY=your_giphy_api_key
 # Database Configuration
 DATABASE_URL=./data/messages.db
 ```
+## Obtaining Required API Keys
+
+### Discord Bot Token
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+2. Click "New Application" and give it a name
+3. Go to the "Bot" section and click "Add Bot"
+4. Under the bot's token, click "Copy" to get your `DC_TOKEN`
+5. Enable the following bot permissions:
+   - Send Messages
+   - Embed Links
+   - Attach Files
+   - Read Message History
+6. Go to OAuth2 > URL Generator:
+   - Select "bot" under scopes
+   - Select the required permissions
+   - Use the generated URL to add the bot to your server
+
+### Discord IDs
+
+To get the required Discord IDs (`DC_GUILD_ID` and `DC_CHANNEL_ID`):
+
+1. Open Discord
+2. Go to User Settings > Advanced
+3. Enable "Developer Mode"
+4. To get the Guild (Server) ID:
+   - Right-click on your server name
+   - Click "Copy Server ID"
+   - Use this as your `DC_GUILD_ID`
+5. To get the Channel ID:
+   - Right-click on the channel where you want the bot to post
+   - Click "Copy Channel ID"
+   - Use this as your `DC_CHANNEL_ID`
+
+### Giphy API Key
+
+1. Go to the [Giphy Developers Portal](https://developers.giphy.com/)
+2. Click "Create an App"
+3. Choose "API" as the app type
+4. Fill in the required information
+5. Once created, you'll find your API key in the dashboard
+6. Copy the API key to use as your `GIPHY_KEY`
 
 ## Database Setup
 
@@ -134,49 +176,6 @@ npm start
   }
   ```
 - `DELETE /sprints?id=1` - Delete a sprint
-
-## Obtaining Required API Keys
-
-### Discord Bot Token
-
-1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
-2. Click "New Application" and give it a name
-3. Go to the "Bot" section and click "Add Bot"
-4. Under the bot's token, click "Copy" to get your `DC_TOKEN`
-5. Enable the following bot permissions:
-   - Send Messages
-   - Embed Links
-   - Attach Files
-   - Read Message History
-6. Go to OAuth2 > URL Generator:
-   - Select "bot" under scopes
-   - Select the required permissions
-   - Use the generated URL to add the bot to your server
-
-### Discord IDs
-
-To get the required Discord IDs (`DC_GUILD_ID` and `DC_CHANNEL_ID`):
-
-1. Open Discord
-2. Go to User Settings > Advanced
-3. Enable "Developer Mode"
-4. To get the Guild (Server) ID:
-   - Right-click on your server name
-   - Click "Copy Server ID"
-   - Use this as your `DC_GUILD_ID`
-5. To get the Channel ID:
-   - Right-click on the channel where you want the bot to post
-   - Click "Copy Channel ID"
-   - Use this as your `DC_CHANNEL_ID`
-
-### Giphy API Key
-
-1. Go to the [Giphy Developers Portal](https://developers.giphy.com/)
-2. Click "Create an App"
-3. Choose "API" as the app type
-4. Fill in the required information
-5. Once created, you'll find your API key in the dashboard
-6. Copy the API key to use as your `GIPHY_KEY`
 
 ## Testing
 
